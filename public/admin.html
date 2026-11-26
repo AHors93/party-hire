@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Bookings admin</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
+    .tabs button { border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: 8px 14px; font: inherit; cursor: pointer; }
+    .tabs button.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .bk { display: grid; gap: 10px; }
+    .bk-top { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; flex-wrap: wrap; }
+    .bk-top h3 { margin: 0; font-size: 18px; }
+    .meta { color: var(--muted); font-size: 14px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px 16px; font-size: 15px; }
+    .grid div small { display: block; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .actions .btn { padding: 9px 14px; font-size: 14px; }
+    .btn-ok { background: var(--ok); color: #fff; }
+    .btn-bad { background: #fff; color: var(--bad); border: 1px solid #f0c9c3; }
+    .btn-wa { background: #25d366; color: #fff; }
+    .inline { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 14px; }
+    .inline input { width: 90px; padding: 7px 9px; border: 1px solid var(--line); border-radius: 8px; font: inherit; }
+    textarea.an { width: 100%; min-height: 50px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; font-size: 14px; }
+    .dep { background: var(--bg); border-radius: 10px; padding: 10px 12px; }
+    .empty { text-align: center; color: var(--muted); padding: 30px; }
+  </style>
+</head>
+<body>
+  <main class="wrap wide">
+    <header class="hero">
+      <h1>Bookings</h1>
+      <p id="sub">Loading…</p>
+      <div class="tabs" id="tabs"></div>
+    </header>
+    <div id="list"></div>
+  </main>
+  <script src="/admin.js"></script>
+</body>
+</html>

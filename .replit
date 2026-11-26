@@ -1,0 +1,10 @@
+run = "npm start"
+modules = ["nodejs-20"]
+
+[deployment]
+run = ["npm", "start"]
+deploymentTarget = "gce"
+
+[[ports]]
+localPort = 3000
+externalPort = 80

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Party Table & Chair Hire – Book</title>
+  <meta name="description" content="Hire party tables and chairs. Pick your dates, choose how many, get an instant quote." />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <h1 id="biz">Party Table & Chair Hire</h1>
+      <p>Pick your dates, choose how many you need and send a request. We'll confirm by message.</p>
+      <div class="prices">
+        <div class="price">Tables <span id="p-table">£7.50</span> <span>/ day</span></div>
+        <div class="price">Chairs <span id="p-chair">£1.50</span> <span>/ day</span></div>
+      </div>
+    </header>
+
+    <div id="form-view">
+      <section class="card">
+        <h2><span class="step">1</span> Choose your dates</h2>
+        <div class="cal-head">
+          <button class="icon-btn" id="prev" aria-label="Previous month">‹</button>
+          <strong id="month-label"></strong>
+          <button class="icon-btn" id="next" aria-label="Next month">›</button>
+        </div>
+        <div class="cal" id="cal"></div>
+        <div class="legend"><span><i></i>Limited stock</span><span>Tap a day, then tap the end day (or just one day).</span></div>
+        <div class="chosen" id="chosen"></div>
+      </section>
+
+      <section class="card">
+        <h2><span class="step">2</span> How many?</h2>
+        <div class="qty-row">
+          <div class="label"><strong>Tables</strong><small id="t-left"></small></div>
+          <div class="stepper"><button data-q="tables" data-d="-1" aria-label="Fewer tables">−</button><input id="tables" type="number" inputmode="numeric" min="0" value="0" /><button data-q="tables" data-d="1" aria-label="More tables">+</button></div>
+        </div>
+        <div class="qty-row">
+          <div class="label"><strong>Chairs</strong><small id="c-left"></small></div>
+          <div class="stepper"><button data-q="chairs" data-d="-1" aria-label="Fewer chairs">−</button><input id="chairs" type="number" inputmode="numeric" min="0" value="0" /><button data-q="chairs" data-d="1" aria-label="More chairs">+</button></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2><span class="step">3</span> Delivery or collection</h2>
+        <div class="seg">
+          <label><input type="radio" name="delivery" value="1" checked /><strong>Deliver to me</strong><small>We drop off &amp; collect</small></label>
+          <label><input type="radio" name="delivery" value="0" /><strong>I'll collect</strong><small>No delivery charge</small></label>
+        </div>
+        <div id="delivery-fields">
+          <div class="field">
+            <label for="postcode">Postcode</label>
+            <input id="postcode" autocomplete="postal-code" placeholder="e.g. M1 1AE" />
+          </div>
+          <div class="field">
+            <label for="address">Delivery address</label>
+            <input id="address" autocomplete="street-address" placeholder="House number and street" />
+          </div>
+          <div id="delivery-note"></div>
+        </div>
+      </section>
+
+      <section class="card summary">
+        <h2>Your quote</h2>
+        <table id="summary"><tr class="sub"><td>Choose dates and items to see a price</td><td></td></tr></table>
+        <div id="deposit-note"></div>
+      </section>
+
+      <section class="card">
+        <h2><span class="step">4</span> Your details</h2>
+        <form id="details" novalidate>
+          <div class="row2">
+            <div class="field"><label for="name">Name</label><input id="name" autocomplete="name" required /></div>
+            <div class="field"><label for="phone">Phone (WhatsApp if possible)</label><input id="phone" type="tel" autocomplete="tel" required /></div>
+          </div>
+          <div class="field"><label for="email">Email (optional)</label><input id="email" type="email" autocomplete="email" /></div>
+          <div class="field">
+            <label>How would you like to pay?</label>
+            <div class="seg">
+              <label><input type="radio" name="payment" value="cash" /><strong>Cash</strong><small>On delivery / collection</small></label>
+              <label><input type="radio" name="payment" value="bank_transfer" /><strong>Bank transfer</strong><small>Details sent when confirmed</small></label>
+            </div>
+          </div>
+          <div class="field"><label for="notes">Anything else? (optional)</label><textarea id="notes" placeholder="Event time, access info, preferred drop-off time…"></textarea></div>
+          <input class="hp" id="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <div class="errors" id="errors"></div>
+          <button class="btn btn-primary" id="submit" type="submit">Send booking request</button>
+          <p class="hint" style="text-align:center">This is a request – nothing is charged now. We'll message you to confirm.</p>
+        </form>
+      </section>
+    </div>
+
+    <section class="card success" id="success-view" hidden>
+      <div class="big">🎉</div>
+      <h2>Request sent!</h2>
+      <p>Your reference is <span class="ref" id="s-ref"></span></p>
+      <p>We'll message you on <strong id="s-phone"></strong> to confirm. You can check your booking any time here:</p>
+      <p><a class="btn btn-ghost" id="s-link" href="#">View my booking</a></p>
+    </section>
+
+    <footer id="footer"></footer>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
