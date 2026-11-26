@@ -145,12 +145,14 @@ async function notifyOwner(req: Request, b: Booking): Promise<void> {
     `Est. total £${b.total.toFixed(2)}${b.deposit ? ` + £${b.deposit.toFixed(2)} deposit` : ''} · ${PAYMENT_METHODS[b.paymentMethod]}`,
   ];
   try {
-    await fetch(`https://ntfy.sh/${encodeURIComponent(cfg.ntfyTopic)}`, {
+    const res = await fetch(`https://ntfy.sh/${encodeURIComponent(cfg.ntfyTopic)}`, {
       method: 'POST',
       body: lines.join('\n'),
       headers: { Title: `New booking request ${b.ref}`, Click: `${baseUrl(req)}/admin`, Tags: 'chair,tada' },
       signal: AbortSignal.timeout(5000),
     });
+    if (res.ok) console.log(`ntfy alert sent for ${b.ref}`);
+    else console.warn(`ntfy refused the alert for ${b.ref}: ${res.status} ${(await res.text()).slice(0, 200)}`);
   } catch (e) {
     console.warn('ntfy notification failed:', e instanceof Error ? e.message : e);
   }
