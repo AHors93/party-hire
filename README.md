@@ -70,6 +70,21 @@ public/              HTML + CSS (compiled browser code lands in public/js/)
 `npm start` runs `npm run build` first, which compiles `src/` to `dist/` (server) and `public/js/` (browser).
 Both output folders are git-ignored. Use `npm run typecheck` to check types without building.
 
+## Rate limiting on Replit (TRUST_PROXY)
+
+Each visitor can send 5 booking requests an hour. To tell visitors apart, the app reads the `X-Forwarded-For` header that Replit's proxies add.
+By default it trusts that header completely, so a determined spammer could fake it to get past the limit.
+They still can't block your calendar, because only bookings you confirm use up stock.
+
+To lock it down once the site is live:
+
+1. On your phone (mobile data, not Wi-Fi), open `https://your-url/admin/api/whoami` and log in.
+2. Look at `forwardedFor`. It's a list of IPs: your phone's IP first, then one IP for each Replit proxy.
+3. Count the IPs **after** your phone's IP. Add a Replit Secret `TRUST_PROXY` set to that number, then redeploy.
+4. Open the page again. `ip` should now be your phone's IP.
+
+If `ip` shows a Replit/Google address instead of yours, the number is too high or low. Leaving `TRUST_PROXY` blank keeps the current behaviour.
+
 ## Tests
 
 ```

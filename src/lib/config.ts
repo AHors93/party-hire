@@ -4,6 +4,17 @@ import path from 'path';
 const num = (v: string | undefined, d: number): number =>
   v === undefined || v === '' || isNaN(Number(v)) ? d : Number(v);
 
+// TRUST_PROXY: how many proxies sit in front of the app (a number), "true"/"false", or a list of proxy IPs/ranges.
+// Decides which visitor IP the rate limiter sees. Check /admin/api/whoami on the live site to pick it.
+function trustProxy(v: string | undefined): boolean | number | string {
+  if (v === undefined || v.trim() === '') return true; // previous behaviour
+  const t = v.trim();
+  if (t === 'true') return true;
+  if (t === 'false') return false;
+  if (/^\d+$/.test(t)) return Number(t);
+  return t;
+}
+
 const config = {
   port: num(process.env.PORT, 3000),
   businessName: process.env.BUSINESS_NAME || 'Party Table & Chair Hire',
@@ -41,6 +52,7 @@ const config = {
   // Admin + notifications
   adminPassword: process.env.ADMIN_PASSWORD || '',
   ntfyTopic: process.env.NTFY_TOPIC || '',
+  trustProxy: trustProxy(process.env.TRUST_PROXY),
 
   // Compiled file lives in dist/lib, so the project root is two levels up
   dataFile: process.env.DATA_FILE || path.join(__dirname, '..', '..', 'data', 'bookings.json'),

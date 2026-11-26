@@ -29,7 +29,7 @@ const PUBLIC_DIR = path.join(__dirname, '..', 'public');
 
 const store = new Store(cfg.dataFile);
 export const app = express();
-app.set('trust proxy', true);
+app.set('trust proxy', cfg.trustProxy);
 app.use(express.json({ limit: '20kb' }));
 
 const STATUSES: readonly BookingStatus[] = ['pending', 'confirmed', 'declined', 'completed', 'cancelled'];
@@ -316,6 +316,17 @@ app.get('/api/bookings/:id', (req, res) => {
 // ---------- admin ----------
 app.get('/admin', adminAuth, (req, res) => res.sendFile(path.join(PUBLIC_DIR, 'admin.html')));
 app.use('/admin/api', adminAuth);
+
+// Shows how the server sees your connection, to choose TRUST_PROXY (see README)
+app.get('/admin/api/whoami', (req, res) => {
+  res.json({
+    ip: req.ip,
+    ips: req.ips,
+    forwardedFor: req.headers['x-forwarded-for'] ?? null,
+    socketAddress: req.socket.remoteAddress ?? null,
+    trustProxy: cfg.trustProxy,
+  });
+});
 
 app.get('/admin/api/bookings', (req, res) => {
   const list = [...store.all()].sort((a, b) =>

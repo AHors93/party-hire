@@ -226,3 +226,11 @@ test('the same visitor is limited to 5 booking attempts an hour', async () => {
   const res = await call('POST', '/api/bookings', {}, { ip });
   assert.equal(res.status, 429);
 });
+
+test('whoami (admin only) shows the IP the rate limiter uses', async () => {
+  assert.equal((await call('GET', '/admin/api/whoami')).status, 401);
+  const res = await call('GET', '/admin/api/whoami', undefined, { auth: 'owner:test-password', ip: '203.0.113.7' });
+  const info = await res.json();
+  assert.equal(info.forwardedFor, '203.0.113.7');
+  assert.equal(info.ip, '203.0.113.7'); // TRUST_PROXY unset = trust the header (current behaviour)
+});
