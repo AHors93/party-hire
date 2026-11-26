@@ -65,6 +65,7 @@ test('customer books 2 tables and 10 chairs for collection', async ({ page }) =>
   await page.getByRole('button', { name: 'Send booking request' }).click();
 
   await expect(page.locator('#success-view')).toBeVisible();
+  await expect(page.locator('#success-view')).toBeInViewport(); // scrolled to the confirmation, not the top of the page
   await expect(page.locator('#form-view')).toBeHidden();
   ref = (await page.locator('#s-ref').textContent())!;
   expect(ref).toMatch(/^PH-[0-9A-F]{6}$/);
@@ -218,5 +219,26 @@ test('works on a phone screen without sideways scrolling', async ({ browser }) =
   await expect(page.locator('.nav-links')).toBeHidden();
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(0);
+
+  // "Book now" in the top bar takes you to the booking form, with the heading not hidden under the bar
+  await page.locator('.topbar').getByRole('link', { name: 'Book now' }).click();
+  await expect(page.getByRole('heading', { name: 'Book your hire' })).toBeInViewport();
+  await expect(page.locator('#cal')).toBeInViewport({ ratio: 0.3 });
+  await ctx.close();
+});
+
+test('on a phone, sending a request shows the confirmation on screen', async ({ browser }) => {
+  const ctx = await browser.newContext({ viewport: { width: 375, height: 700 }, isMobile: true, hasTouch: true });
+  const page = await ctx.newPage();
+  await page.goto('/#book');
+  await pickFirstFreeDay(page);
+  await page.getByRole('button', { name: 'More chairs' }).click();
+  await page.getByText("I'll collect").click();
+  await page.getByLabel('Name').fill('Phone Tester');
+  await page.getByLabel('Phone (WhatsApp if possible)').fill('07123 456789');
+  await page.getByText('Cash', { exact: true }).click();
+  await page.getByRole('button', { name: 'Send booking request' }).click();
+  await expect(page.getByRole('heading', { name: 'Request sent!' })).toBeInViewport();
+  await expect(page.locator('#s-ref')).toBeInViewport();
   await ctx.close();
 });

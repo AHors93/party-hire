@@ -239,7 +239,8 @@ async function submit(e: SubmitEvent): Promise<void> {
     $('s-ref').textContent = r.ref ?? '';
     $('s-phone').textContent = input('phone').value;
     $<HTMLAnchorElement>('s-link').href = '/b/' + r.id;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Show the confirmation, not the top of the page (the hero is up there now)
+    $('book').scrollIntoView({ behavior: 'smooth', block: 'start' });
   } catch (err) {
     showErrors(err instanceof ApiError && err.data.errors ? err.data.errors : [err instanceof Error ? err.message : String(err)]);
     btn.disabled = false; btn.textContent = 'Send booking request';
