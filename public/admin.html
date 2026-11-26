@@ -26,13 +26,23 @@
     .inline input { width: 90px; padding: 7px 9px; border: 1px solid var(--line); border-radius: 8px; font: inherit; }
     textarea.an { width: 100%; min-height: 50px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; font-size: 14px; }
     .dep { background: var(--bg); border-radius: 10px; padding: 10px 12px; }
+    .admin-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .admin-head h1 { margin: 0; }
+    .downloads { display: flex; gap: 8px; flex-wrap: wrap; }
+    .downloads .btn { padding: 9px 14px; font-size: 14px; }
     .empty { text-align: center; color: var(--muted); padding: 30px; }
   </style>
 </head>
 <body>
   <main class="wrap wide">
     <header class="hero">
-      <h1>Bookings</h1>
+      <div class="admin-head">
+        <h1>Bookings</h1>
+        <div class="downloads">
+          <a class="btn btn-ghost" href="/admin/api/export.csv" download title="Every booking, opens in Excel or Google Sheets">⬇ Download bookings</a>
+          <a class="btn btn-ghost" href="/admin/api/export.json" download title="Complete copy of the data file, for safekeeping">Full backup</a>
+        </div>
+      </div>
       <p id="sub">Loading…</p>
       <div class="tabs" id="tabs"></div>
     </header>

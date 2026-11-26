@@ -247,3 +247,21 @@ test('admin can delete a booking, which frees its stock', async () => {
   assert.equal((await call('GET', `/api/bookings/${id}`)).status, 404);
   assert.equal((await admin('DELETE', `/admin/api/bookings/${id}`)).status, 404);
 });
+
+test('admin can download all bookings as CSV and as a JSON backup', async () => {
+  const { ref } = await book({ start: daysFromNow(85), end: daysFromNow(85), name: 'Export Person' });
+  assert.equal((await call('GET', '/admin/api/export.csv')).status, 401);
+  assert.equal((await call('GET', '/admin/api/export.json')).status, 401);
+
+  const csv = await admin('GET', '/admin/api/export.csv');
+  assert.equal(csv.status, 200);
+  assert.match(csv.headers.get('content-type')!, /text\/csv/);
+  assert.match(csv.headers.get('content-disposition')!, /attachment; filename="bookings-\d{4}-\d{2}-\d{2}\.csv"/);
+  const text = await csv.text();
+  assert.ok(text.includes(ref) && text.includes('Export Person'));
+
+  const backup = await admin('GET', '/admin/api/export.json');
+  assert.match(backup.headers.get('content-disposition')!, /bookings-backup-/);
+  const all = (await backup.json()) as { ref: string }[];
+  assert.ok(all.some((b) => b.ref === ref));
+});

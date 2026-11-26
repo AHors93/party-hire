@@ -18,7 +18,31 @@ You get a phone notification and an admin page (`/admin`) where you can:
 
 Only **confirmed** bookings reserve stock, so spam requests can't block your calendar.
 
-## Put it on Replit (about 5 minutes)
+## Put it on Railway (recommended, about 10 minutes)
+
+Railway runs the site all the time, keeps your bookings file safe on a volume, and **updates the live site by itself every time code is pushed to GitHub**.
+The Hobby plan is $5/month and includes $5 of usage, which an app this size should fit inside.
+
+1. Go to [railway.com](https://railway.com), sign in with GitHub, and pick the **Hobby** plan.
+2. **New Project → Deploy from GitHub repo → party-hire.** If it isn't listed, click *Configure GitHub App* and give Railway access to the repo.
+   The first deploy starts straight away. It may complain until step 3 is done, which is fine.
+3. Open the service → **Variables → Raw Editor**, paste in your settings from `.env.example` with your real values, and save. At least set
+   `ADMIN_PASSWORD`, `HOME_POSTCODE`, `TOTAL_TABLES`, `TOTAL_CHAIRS`, `BANK_DETAILS`, `CONTACT_PHONE` and `BUSINESS_NAME`. Don't set `PORT`; Railway does that.
+4. **Add storage for bookings:** right-click the service on the project canvas (or press ⌘K / Ctrl+K and type "volume") → **Attach volume**, with mount path `/data`.
+   The app finds it automatically and saves bookings to `/data/bookings.json`. **Without a volume, bookings are lost on every update.**
+5. **Settings → Networking → Generate Domain** gives you a `something.up.railway.app` address. You can also add your own domain there.
+6. Add a variable `PUBLIC_URL` set to that address (e.g. `https://party-hire-production.up.railway.app`) so links in WhatsApp messages point to it.
+7. Check it works: open the site, then `/admin`. Then do the `TRUST_PROXY` step below.
+
+Updates are automatic from then on: anything pushed to the `main` branch on GitHub goes live within a couple of minutes.
+Because the site uses a volume, it's offline for a few seconds during each update. Build and start commands live in `railway.json`.
+
+**Backups:** in admin, **⬇ Download bookings** gives you a spreadsheet of every booking, and **Full backup** downloads the raw data file. Do this now and then.
+To restore a backup, upload it to the volume as `bookings.json` (or ask for help).
+
+## Or put it on Replit
+
+
 
 1. Create a new Repl → **Import** → upload this folder (or push it to GitHub and import from there).
 2. Open **Secrets** (🔒) and add at least:
@@ -70,20 +94,20 @@ public/              HTML + CSS (compiled browser code lands in public/js/)
 `npm start` runs `npm run build` first, which compiles `src/` to `dist/` (server) and `public/js/` (browser).
 Both output folders are git-ignored. Use `npm run typecheck` to check types without building.
 
-## Rate limiting on Replit (TRUST_PROXY)
+## Rate limiting (TRUST_PROXY)
 
-Each visitor can send 5 booking requests an hour. To tell visitors apart, the app reads the `X-Forwarded-For` header that Replit's proxies add.
+Each visitor can send 5 booking requests an hour. To tell visitors apart, the app reads the `X-Forwarded-For` header that your host's proxies (Railway or Replit) add.
 By default it trusts that header completely, so a determined spammer could fake it to get past the limit.
 They still can't block your calendar, because only bookings you confirm use up stock.
 
 To lock it down once the site is live:
 
 1. On your phone (mobile data, not Wi-Fi), open `https://your-url/admin/api/whoami` and log in.
-2. Look at `forwardedFor`. It's a list of IPs: your phone's IP first, then one IP for each Replit proxy.
-3. Count the IPs **after** your phone's IP. Add a Replit Secret `TRUST_PROXY` set to that number, then redeploy.
+2. Look at `forwardedFor`. It's a list of IPs: your phone's IP first, then one IP for each proxy.
+3. Count the IPs **after** your phone's IP, plus one. Set the variable/secret `TRUST_PROXY` to that number, then redeploy.
 4. Open the page again. `ip` should now be your phone's IP.
 
-If `ip` shows a Replit/Google address instead of yours, the number is too high or low. Leaving `TRUST_PROXY` blank keeps the current behaviour.
+If `ip` shows a host/cloud address instead of yours, the number is too high or low. Leaving `TRUST_PROXY` blank keeps the current behaviour.
 
 ## Tests
 

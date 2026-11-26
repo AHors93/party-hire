@@ -54,8 +54,13 @@ const config = {
   ntfyTopic: process.env.NTFY_TOPIC || '',
   trustProxy: trustProxy(process.env.TRUST_PROXY),
 
-  // Compiled file lives in dist/lib, so the project root is two levels up
-  dataFile: process.env.DATA_FILE || path.join(__dirname, '..', '..', 'data', 'bookings.json'),
+  // Where bookings are saved. On Railway, the attached volume is used automatically.
+  // Otherwise data/bookings.json in the project (compiled file lives in dist/lib, so root is two levels up).
+  dataFile:
+    process.env.DATA_FILE ||
+    (process.env.RAILWAY_VOLUME_MOUNT_PATH
+      ? path.join(process.env.RAILWAY_VOLUME_MOUNT_PATH, 'bookings.json')
+      : path.join(__dirname, '..', '..', 'data', 'bookings.json')),
 };
 
 export type Config = typeof config;

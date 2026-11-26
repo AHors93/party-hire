@@ -133,6 +133,22 @@ test('confirmed booking reduces stock on the calendar', async ({ page }) => {
   await expect(page.locator('#t-left')).toHaveText('8 available');
 });
 
+test('owner downloads the bookings spreadsheet', async ({ browser }) => {
+  const ctx = await browser.newContext({ httpCredentials: ADMIN, acceptDownloads: true });
+  const page = await ctx.newPage();
+  await page.goto('/admin');
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByRole('link', { name: '⬇ Download bookings' }).click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toMatch(/^bookings-\d{4}-\d{2}-\d{2}\.csv$/);
+  const fs = await import('node:fs');
+  const text = fs.readFileSync((await download.path())!, 'utf8');
+  expect(text).toContain('Reference,Status');
+  expect(text).toContain(ref);
+  expect(text).toContain('Playwright Tester');
+  await ctx.close();
+});
+
 test('owner deletes the test booking, freeing the stock', async ({ browser }) => {
   const ctx = await browser.newContext({ httpCredentials: ADMIN });
   const page = await ctx.newPage();

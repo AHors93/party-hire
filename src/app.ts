@@ -7,6 +7,7 @@ import Store from './lib/store';
 import { isValidDate, todayUK, addDays, dayCount, eachDay, prettyRange } from './lib/dates';
 import { lookupPostcode, drivingMiles, type Place } from './lib/distance';
 import { hireQuote, deliveryQuote, round2 } from './lib/pricing';
+import { bookingsToCsv } from './lib/export';
 import type {
   AdminBookingsResponse,
   AdminPatchBody,
@@ -394,6 +395,18 @@ app.patch('/admin/api/bookings/:id', (req, res) => {
     if (body.depositStatus === 'returned') patch.depositReturnedAt = new Date().toISOString();
   }
   res.json({ booking: store.update(b.id, patch) });
+});
+
+// Downloads: a spreadsheet of every booking, and a full JSON backup
+app.get('/admin/api/export.csv', (req, res) => {
+  res.set('Content-Type', 'text/csv; charset=utf-8');
+  res.attachment(`bookings-${todayUK()}.csv`);
+  res.send(bookingsToCsv(store.all()));
+});
+
+app.get('/admin/api/export.json', (req, res) => {
+  res.attachment(`bookings-backup-${todayUK()}.json`);
+  res.json(store.all());
 });
 
 // Permanently removes a booking (e.g. a test one). Frees any stock it was holding.
