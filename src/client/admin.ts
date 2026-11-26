@@ -128,6 +128,7 @@ function card(b: AdminBooking): string {
     actions = `<button class="btn btn-ghost" data-a="reopen">Re-open</button>`;
   }
   actions += `<a class="btn btn-ghost" target="_blank" rel="noopener" href="${esc(wa(b, messages.generic(b)))}">WhatsApp</a><a class="btn btn-ghost" href="tel:${esc(b.phone)}">Call</a>`;
+  actions += `<button class="btn btn-bad btn-delete" data-a="delete" title="Permanently delete, e.g. a test booking">Delete</button>`;
 
   return `<section class="card bk" data-id="${esc(b.id)}">
     <div class="bk-top">
@@ -191,6 +192,13 @@ $('list').addEventListener('click', async (e) => {
   if (a === 'dep-return') { if (!confirm(`Have you returned ${money(b.deposit)} to ${b.name}?`)) return; openWa(messages.depositReturned(b)); void patch(b.id, { depositStatus: 'returned' }); }
   if (a === 'dep-keep') { if (confirm('Keep the deposit (e.g. damage)? Add a note explaining why.')) void patch(b.id, { depositStatus: 'kept' }); }
   if (a === 'dep-undo') void patch(b.id, { depositStatus: 'received' });
+  if (a === 'delete') {
+    const holdsStock = b.status === 'confirmed' ? '\nIt is confirmed, so its tables and chairs will be freed up.' : '';
+    if (!confirm(`Permanently delete ${b.ref} (${b.name}, ${b.dates})?${holdsStock}\n\nThis can't be undone. No message is sent.`)) return;
+    const res = await fetch('/admin/api/bookings/' + b.id, { method: 'DELETE' });
+    if (!res.ok) { alert('Delete failed'); return; }
+    await load();
+  }
   if (a === 'save-fee') void patch(b.id, { deliveryFee: el.querySelector<HTMLInputElement>('[data-f=fee]')?.value ?? '' });
 });
 

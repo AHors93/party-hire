@@ -396,6 +396,15 @@ app.patch('/admin/api/bookings/:id', (req, res) => {
   res.json({ booking: store.update(b.id, patch) });
 });
 
+// Permanently removes a booking (e.g. a test one). Frees any stock it was holding.
+app.delete('/admin/api/bookings/:id', (req, res) => {
+  if (!store.remove(req.params.id)) {
+    res.status(404).json({ error: 'Not found' });
+    return;
+  }
+  res.json({ ok: true });
+});
+
 // ---------- pages ----------
 app.get('/b/:id', (req, res) => res.sendFile(path.join(PUBLIC_DIR, 'status.html')));
 app.use(express.static(PUBLIC_DIR, { index: 'index.html', extensions: ['html'] }));

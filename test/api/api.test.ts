@@ -234,3 +234,16 @@ test('whoami (admin only) shows the IP the rate limiter uses', async () => {
   assert.equal(info.forwardedFor, '203.0.113.7');
   assert.equal(info.ip, '203.0.113.7'); // TRUST_PROXY unset = trust the header (current behaviour)
 });
+
+test('admin can delete a booking, which frees its stock', async () => {
+  const day = daysFromNow(80);
+  const { id } = await book({ start: day, end: day, tables: 4, chairs: 0 });
+  await admin('PATCH', `/admin/api/bookings/${id}`, { status: 'confirmed' });
+  assert.equal((await availability(day)).tables, 6);
+
+  assert.equal((await call('DELETE', `/admin/api/bookings/${id}`)).status, 401); // needs the password
+  assert.equal((await admin('DELETE', `/admin/api/bookings/${id}`)).status, 200);
+  assert.equal((await availability(day)).tables, 10);
+  assert.equal((await call('GET', `/api/bookings/${id}`)).status, 404);
+  assert.equal((await admin('DELETE', `/admin/api/bookings/${id}`)).status, 404);
+});

@@ -35,6 +35,14 @@ export default class Store {
     return booking;
   }
 
+  remove(id: string): boolean {
+    const i = this.bookings.findIndex((b) => b.id === id);
+    if (i === -1) return false;
+    this.bookings.splice(i, 1);
+    this.save();
+    return true;
+  }
+
   update(id: string, patch: Partial<Booking>): Booking | null {
     const b = this.get(id);
     if (!b) return null;

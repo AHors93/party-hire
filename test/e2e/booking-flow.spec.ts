@@ -133,6 +133,48 @@ test('confirmed booking reduces stock on the calendar', async ({ page }) => {
   await expect(page.locator('#t-left')).toHaveText('8 available');
 });
 
+test('owner deletes the test booking, freeing the stock', async ({ browser }) => {
+  const ctx = await browser.newContext({ httpCredentials: ADMIN });
+  const page = await ctx.newPage();
+  await page.goto('/admin');
+  await page.getByRole('button', { name: /^All/ }).click();
+  const card = page.locator('.bk', { hasText: ref });
+  page.once('dialog', (d) => {
+    expect(d.message()).toContain(`Permanently delete ${ref}`);
+    expect(d.message()).toContain('will be freed up');
+    void d.accept();
+  });
+  await card.getByRole('button', { name: 'Delete' }).click();
+  await expect(card).toHaveCount(0);
+  await ctx.close();
+
+  const customer = await browser.newPage();
+  await customer.goto('/#book');
+  await expect(customer.locator(`#cal button[data-d="${bookedDay}"]`)).toHaveAttribute('title', '10 tables, 60 chairs free');
+  const res = await customer.goto(statusPath);
+  await expect(customer.locator('#out')).toContainText("couldn't find that booking");
+  expect(res?.status()).toBe(200);
+  await customer.close();
+});
+
+test('cancelling the delete dialog keeps the booking', async ({ browser, page }) => {
+  // make a fresh booking through the API, then refuse the confirm dialog
+  const day = await (async () => { await page.goto('/#book'); return pickFirstFreeDay(page); })();
+  const r = await page.request.post('/api/bookings', { data: {
+    start: day, end: day, tables: 1, chairs: 0, name: 'Keep Me', phone: '07123 456789', paymentMethod: 'cash', delivery: false,
+  } });
+  const { ref: keepRef } = await r.json();
+  const ctx = await browser.newContext({ httpCredentials: ADMIN });
+  const admin = await ctx.newPage();
+  await admin.goto('/admin');
+  const card = admin.locator('.bk', { hasText: keepRef });
+  admin.once('dialog', (d) => void d.dismiss());
+  await card.getByRole('button', { name: 'Delete' }).click();
+  await admin.reload();
+  await expect(admin.locator('.bk', { hasText: keepRef })).toBeVisible();
+  await ctx.close();
+});
+
 test('delivery estimate appears in the quote', async ({ page }) => {
   // The real estimate calls postcode/route services; here we fake that answer to test the page itself
   await page.route('**/api/quote', (route) =>
