@@ -15,11 +15,18 @@ function trustProxy(v: string | undefined): boolean | number | string {
   return t;
 }
 
+// PUBLIC_URL: accept "mysite.up.railway.app" as well as "https://mysite.up.railway.app/"
+function publicUrl(v: string | undefined): string {
+  const t = (v || '').trim().replace(/\/+$/, '');
+  if (!t) return '';
+  return /^https?:\/\//i.test(t) ? t : `https://${t}`;
+}
+
 const config = {
   port: num(process.env.PORT, 3000),
   businessName: process.env.BUSINESS_NAME || 'Party Table & Chair Hire',
   contactPhone: process.env.CONTACT_PHONE || '',
-  publicUrl: (process.env.PUBLIC_URL || '').replace(/\/$/, ''),
+  publicUrl: publicUrl(process.env.PUBLIC_URL),
 
   // Prices (per item, per day)
   tablePrice: num(process.env.TABLE_PRICE, 7.5),
@@ -51,7 +58,7 @@ const config = {
 
   // Admin + notifications
   adminPassword: process.env.ADMIN_PASSWORD || '',
-  ntfyTopic: process.env.NTFY_TOPIC || '',
+  ntfyTopic: (process.env.NTFY_TOPIC || '').trim(),
   trustProxy: trustProxy(process.env.TRUST_PROXY),
 
   // Where bookings are saved. On Railway, the attached volume is used automatically.
