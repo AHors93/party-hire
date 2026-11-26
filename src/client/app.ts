@@ -255,9 +255,18 @@ async function init(): Promise<void> {
   state.cfg = await api<PublicConfig>('/api/config');
   const c = state.cfg;
   document.title = `${c.businessName} – Book`;
-  $('biz').textContent = c.businessName;
-  $('p-table').textContent = money(c.tablePrice);
-  $('p-chair').textContent = money(c.chairPrice);
+  // Landing-page text that depends on your settings
+  const fill = (sel: string, text: string) => document.querySelectorAll(sel).forEach((el) => { el.textContent = text; });
+  const showIf = (sel: string, show: boolean) => document.querySelectorAll<HTMLElement>(sel).forEach((el) => { el.hidden = !show; });
+  fill('[data-biz]', c.businessName);
+  fill('[data-price=table]', money(c.tablePrice));
+  fill('[data-price=chair]', money(c.chairPrice));
+  fill('[data-deposit-pct]', String(c.depositPercent));
+  fill('[data-max-miles]', String(c.maxDeliveryMiles));
+  fill('[data-max-days]', String(c.maxHireDays));
+  fill('#year', String(new Date().getFullYear()));
+  showIf('[data-if-deposit]', c.depositPercent > 0);
+  showIf('[data-if-miles]', c.deliveryEnabled && c.maxDeliveryMiles > 0);
   $('footer').innerHTML = c.contactPhone ? `Questions? Call or WhatsApp <a href="tel:${esc(c.contactPhone)}">${esc(c.contactPhone)}</a>` : '';
   if (!c.deliveryEnabled) $('delivery-note').innerHTML = '<p class="hint">We\'ll confirm the delivery cost with you.</p>';
   const t = new Date(c.today + 'T00:00:00Z');

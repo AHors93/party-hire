@@ -3,105 +3,294 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Party Table & Chair Hire – Book</title>
-  <meta name="description" content="Hire party tables and chairs. Pick your dates, choose how many, get an instant quote." />
+  <title>Party Table & Chair Hire – Book online</title>
+  <meta name="description" content="Hire party tables and chairs, delivered and collected. Check availability, get an instant quote and book online in a couple of minutes." />
+  <meta name="theme-color" content="#e0533d" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎉</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/styles.css" />
 </head>
-<body>
-  <main class="wrap">
-    <header class="hero">
-      <h1 id="biz">Party Table & Chair Hire</h1>
-      <p>Pick your dates, choose how many you need and send a request. We'll confirm by message.</p>
-      <div class="prices">
-        <div class="price">Tables <span id="p-table">£7.50</span> <span>/ day</span></div>
-        <div class="price">Chairs <span id="p-chair">£1.50</span> <span>/ day</span></div>
+<body class="site">
+  <nav class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">🎉</span><span data-biz>Party Table &amp; Chair Hire</span></a>
+      <div class="nav-links">
+        <a href="#how">How it works</a>
+        <a href="#prices">Prices</a>
+        <a href="#faq">FAQ</a>
       </div>
-    </header>
+      <a class="btn btn-nav" href="#book">Book now</a>
+    </div>
+  </nav>
 
-    <div id="form-view">
-      <section class="card">
-        <h2><span class="step">1</span> Choose your dates</h2>
-        <div class="cal-head">
-          <button class="icon-btn" id="prev" aria-label="Previous month">‹</button>
-          <strong id="month-label"></strong>
-          <button class="icon-btn" id="next" aria-label="Next month">›</button>
+  <header class="landing-hero" id="top">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Party furniture hire</p>
+        <h1>Tables &amp; chairs for your party, <em>sorted.</em></h1>
+        <p class="lede">Hire tables and chairs for birthdays, garden parties and family get-togethers. Check which dates are free, get an instant price and send your booking request in a couple of minutes.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-cta" href="#book">Check availability</a>
+          <a class="btn btn-ghost" href="#how">How it works</a>
         </div>
-        <div class="cal" id="cal"></div>
-        <div class="legend"><span><i></i>Limited stock</span><span>Tap a day, then tap the end day (or just one day).</span></div>
-        <div class="chosen" id="chosen"></div>
-      </section>
+        <div class="prices">
+          <div class="price">Tables <strong data-price="table">£7.50</strong> <span>/ day</span></div>
+          <div class="price">Chairs <strong data-price="chair">£1.50</strong> <span>/ day</span></div>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <svg viewBox="0 0 420 300" role="img">
+          <path d="M10 30 Q210 90 410 30" fill="none" stroke="#c9bfb2" stroke-width="2" />
+          <polygon points="22,38 58,40 40,72" fill="#e0533d" />
+          <polygon points="77,50 113,52 95,84" fill="#f4b740" />
+          <polygon points="132,57 168,59 150,91" fill="#2a9d8f" />
+          <polygon points="192,60 228,62 210,94" fill="#e0533d" />
+          <polygon points="252,57 288,59 270,91" fill="#f4b740" />
+          <polygon points="307,50 343,52 325,84" fill="#2a9d8f" />
+          <polygon points="362,38 398,40 380,72" fill="#e0533d" />
+          <line x1="58" y1="140" x2="72" y2="205" stroke="#9c9186" stroke-width="1.5" />
+          <line x1="96" y1="122" x2="76" y2="205" stroke="#9c9186" stroke-width="1.5" />
+          <ellipse cx="58" cy="122" rx="20" ry="24" fill="#e0533d" />
+          <ellipse cx="96" cy="104" rx="18" ry="22" fill="#f4b740" />
+          <circle cx="160" cy="120" r="4" fill="#2a9d8f" />
+          <circle cx="330" cy="118" r="4" fill="#e0533d" />
+          <circle cx="370" cy="150" r="3" fill="#f4b740" />
+          <circle cx="300" cy="140" r="3" fill="#2a9d8f" />
+          <rect x="200" y="132" width="60" height="32" rx="4" fill="#f4b740" />
+          <rect x="210" y="112" width="40" height="22" rx="4" fill="#e0533d" />
+          <rect x="228" y="98" width="4" height="14" fill="#2a9d8f" />
+          <ellipse cx="230" cy="93" rx="4" ry="6" fill="#f4b740" />
+          <rect x="125" y="164" width="210" height="12" rx="4" fill="#1f1b16" />
+          <path d="M130 176 H330 L322 214 Q300 222 280 214 Q255 222 230 214 Q205 222 180 214 Q160 222 138 214 Z" fill="#fdebe7" />
+          <rect x="145" y="214" width="8" height="52" rx="2" fill="#1f1b16" />
+          <rect x="307" y="214" width="8" height="52" rx="2" fill="#1f1b16" />
+          <rect x="86" y="140" width="9" height="126" rx="3" fill="#2a9d8f" />
+          <rect x="86" y="200" width="46" height="9" rx="3" fill="#2a9d8f" />
+          <rect x="124" y="209" width="8" height="57" rx="2" fill="#2a9d8f" />
+          <rect x="365" y="140" width="9" height="126" rx="3" fill="#2a9d8f" />
+          <rect x="328" y="200" width="46" height="9" rx="3" fill="#2a9d8f" />
+          <rect x="328" y="209" width="8" height="57" rx="2" fill="#2a9d8f" />
+          <line x1="20" y1="267" x2="400" y2="267" stroke="#e9e1d6" stroke-width="3" stroke-linecap="round" />
+        </svg>
+      </div>
+    </div>
+    <div class="container">
+      <ul class="trust">
+        <li><span aria-hidden="true">⚡</span> Instant online quote</li>
+        <li><span aria-hidden="true">🚚</span> Delivery &amp; collection</li>
+        <li><span aria-hidden="true">🔒</span> Nothing to pay until we confirm</li>
+        <li><span aria-hidden="true">💬</span> Confirmed by WhatsApp or text</li>
+      </ul>
+    </div>
+  </header>
 
-      <section class="card">
-        <h2><span class="step">2</span> How many?</h2>
-        <div class="qty-row">
-          <div class="label"><strong>Tables</strong><small id="t-left"></small></div>
-          <div class="stepper"><button data-q="tables" data-d="-1" aria-label="Fewer tables">−</button><input id="tables" type="number" inputmode="numeric" min="0" value="0" /><button data-q="tables" data-d="1" aria-label="More tables">+</button></div>
-        </div>
-        <div class="qty-row">
-          <div class="label"><strong>Chairs</strong><small id="c-left"></small></div>
-          <div class="stepper"><button data-q="chairs" data-d="-1" aria-label="Fewer chairs">−</button><input id="chairs" type="number" inputmode="numeric" min="0" value="0" /><button data-q="chairs" data-d="1" aria-label="More chairs">+</button></div>
-        </div>
-      </section>
+  <section class="section" id="how">
+    <div class="container">
+      <h2 class="section-title">How it works</h2>
+      <p class="section-lede">No phone tag, no back-and-forth. Three steps and you're sorted.</p>
+      <ol class="how">
+        <li>
+          <span class="how-num">1</span>
+          <h3>Pick your dates</h3>
+          <p>The calendar shows which days are free. Choose a single day or a few days in a row.</p>
+        </li>
+        <li>
+          <span class="how-num">2</span>
+          <h3>Get an instant quote</h3>
+          <p>Choose how many tables and chairs you need, then enter your postcode for a delivery price, or collect from us for free.</p>
+        </li>
+        <li>
+          <span class="how-num">3</span>
+          <h3>We confirm by message</h3>
+          <p>Send your request and we'll message you to confirm. Pay by cash or bank transfer, with nothing charged up front online.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
 
-      <section class="card">
-        <h2><span class="step">3</span> Delivery or collection</h2>
-        <div class="seg">
-          <label><input type="radio" name="delivery" value="1" checked /><strong>Deliver to me</strong><small>We drop off &amp; collect</small></label>
-          <label><input type="radio" name="delivery" value="0" /><strong>I'll collect</strong><small>No delivery charge</small></label>
+  <section class="section section-alt" id="prices">
+    <div class="container">
+      <h2 class="section-title">Simple pricing</h2>
+      <p class="section-lede">Priced per item, per day. You'll see the full total before you send anything.</p>
+      <div class="price-cards">
+        <div class="price-card">
+          <div class="price-icon" aria-hidden="true">🪑</div>
+          <h3>Chairs</h3>
+          <p class="price-big"><strong data-price="chair">£1.50</strong><span>per chair, per day</span></p>
         </div>
-        <div id="delivery-fields">
-          <div class="field">
-            <label for="postcode">Postcode</label>
-            <input id="postcode" autocomplete="postal-code" placeholder="e.g. M1 1AE" />
+        <div class="price-card featured">
+          <div class="price-icon" aria-hidden="true">🍽️</div>
+          <h3>Tables</h3>
+          <p class="price-big"><strong data-price="table">£7.50</strong><span>per table, per day</span></p>
+        </div>
+        <div class="price-card">
+          <div class="price-icon" aria-hidden="true">🚚</div>
+          <h3>Delivery</h3>
+          <p class="price-big"><strong>By distance</strong><span>drop-off &amp; collection, or collect free</span></p>
+        </div>
+      </div>
+      <p class="hint center" data-if-deposit>A refundable deposit of <span data-deposit-pct>10</span>% of the hire cost is returned once everything's back in good condition.</p>
+      <div class="occasions">
+        <span class="occasions-label">Great for</span>
+        <span class="chip">🎂 Birthdays</span>
+        <span class="chip">🌿 Garden parties</span>
+        <span class="chip">👶 Christenings &amp; baby showers</span>
+        <span class="chip">🍔 BBQs</span>
+        <span class="chip">🏮 Religious celebrations</span>
+        <span class="chip">🏡 Family get-togethers</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="book">
+    <div class="container">
+      <h2 class="section-title">Book your hire</h2>
+      <p class="section-lede">This is a request. Nothing is charged now, and we'll message you to confirm.</p>
+
+      <div id="form-view" class="book-grid">
+        <section class="card">
+          <h2><span class="step">1</span> Choose your dates</h2>
+          <div class="cal-head">
+            <button class="icon-btn" id="prev" aria-label="Previous month">‹</button>
+            <strong id="month-label"></strong>
+            <button class="icon-btn" id="next" aria-label="Next month">›</button>
           </div>
-          <div class="field">
-            <label for="address">Delivery address</label>
-            <input id="address" autocomplete="street-address" placeholder="House number and street" />
-          </div>
-          <div id="delivery-note"></div>
-        </div>
-      </section>
+          <div class="cal" id="cal"></div>
+          <div class="legend"><span><i></i>Limited stock</span><span>Tap a day, then tap the end day (or just one day).</span></div>
+          <div class="chosen" id="chosen"></div>
+        </section>
 
-      <section class="card summary">
-        <h2>Your quote</h2>
-        <table id="summary"><tr class="sub"><td>Choose dates and items to see a price</td><td></td></tr></table>
-        <div id="deposit-note"></div>
-      </section>
-
-      <section class="card">
-        <h2><span class="step">4</span> Your details</h2>
-        <form id="details" novalidate>
-          <div class="row2">
-            <div class="field"><label for="name">Name</label><input id="name" autocomplete="name" required /></div>
-            <div class="field"><label for="phone">Phone (WhatsApp if possible)</label><input id="phone" type="tel" autocomplete="tel" required /></div>
+        <section class="card">
+          <h2><span class="step">2</span> How many?</h2>
+          <div class="qty-row">
+            <div class="label"><strong>Tables</strong><small id="t-left"></small></div>
+            <div class="stepper"><button data-q="tables" data-d="-1" aria-label="Fewer tables">−</button><input id="tables" type="number" inputmode="numeric" min="0" value="0" /><button data-q="tables" data-d="1" aria-label="More tables">+</button></div>
           </div>
-          <div class="field"><label for="email">Email (optional)</label><input id="email" type="email" autocomplete="email" /></div>
-          <div class="field">
-            <label>How would you like to pay?</label>
-            <div class="seg">
-              <label><input type="radio" name="payment" value="cash" /><strong>Cash</strong><small>On delivery / collection</small></label>
-              <label><input type="radio" name="payment" value="bank_transfer" /><strong>Bank transfer</strong><small>Details sent when confirmed</small></label>
+          <div class="qty-row">
+            <div class="label"><strong>Chairs</strong><small id="c-left"></small></div>
+            <div class="stepper"><button data-q="chairs" data-d="-1" aria-label="Fewer chairs">−</button><input id="chairs" type="number" inputmode="numeric" min="0" value="0" /><button data-q="chairs" data-d="1" aria-label="More chairs">+</button></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2><span class="step">3</span> Delivery or collection</h2>
+          <div class="seg">
+            <label><input type="radio" name="delivery" value="1" checked /><strong>Deliver to me</strong><small>We drop off &amp; collect</small></label>
+            <label><input type="radio" name="delivery" value="0" /><strong>I'll collect</strong><small>No delivery charge</small></label>
+          </div>
+          <div id="delivery-fields">
+            <div class="field">
+              <label for="postcode">Postcode</label>
+              <input id="postcode" autocomplete="postal-code" placeholder="e.g. M1 1AE" />
             </div>
+            <div class="field">
+              <label for="address">Delivery address</label>
+              <input id="address" autocomplete="street-address" placeholder="House number and street" />
+            </div>
+            <div id="delivery-note"></div>
           </div>
-          <div class="field"><label for="notes">Anything else? (optional)</label><textarea id="notes" placeholder="Event time, access info, preferred drop-off time…"></textarea></div>
-          <input class="hp" id="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
-          <div class="errors" id="errors"></div>
-          <button class="btn btn-primary" id="submit" type="submit">Send booking request</button>
-          <p class="hint" style="text-align:center">This is a request – nothing is charged now. We'll message you to confirm.</p>
-        </form>
+        </section>
+
+        <aside class="card summary book-side">
+          <h2>Your quote</h2>
+          <table id="summary"><tr class="sub"><td>Choose dates and items to see a price</td><td></td></tr></table>
+          <div id="deposit-note"></div>
+        </aside>
+
+        <section class="card">
+          <h2><span class="step">4</span> Your details</h2>
+          <form id="details" novalidate>
+            <div class="row2">
+              <div class="field"><label for="name">Name</label><input id="name" autocomplete="name" required /></div>
+              <div class="field"><label for="phone">Phone (WhatsApp if possible)</label><input id="phone" type="tel" autocomplete="tel" required /></div>
+            </div>
+            <div class="field"><label for="email">Email (optional)</label><input id="email" type="email" autocomplete="email" /></div>
+            <div class="field">
+              <label>How would you like to pay?</label>
+              <div class="seg">
+                <label><input type="radio" name="payment" value="cash" /><strong>Cash</strong><small>On delivery / collection</small></label>
+                <label><input type="radio" name="payment" value="bank_transfer" /><strong>Bank transfer</strong><small>Details sent when confirmed</small></label>
+              </div>
+            </div>
+            <div class="field"><label for="notes">Anything else? (optional)</label><textarea id="notes" placeholder="Event time, access info, preferred drop-off time…"></textarea></div>
+            <input class="hp" id="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <div class="errors" id="errors"></div>
+            <button class="btn btn-primary" id="submit" type="submit">Send booking request</button>
+            <p class="hint" style="text-align:center">This is a request. Nothing is charged now, and we'll message you to confirm.</p>
+          </form>
+        </section>
+      </div>
+
+      <section class="card success" id="success-view" hidden>
+        <div class="big">🎉</div>
+        <h2>Request sent!</h2>
+        <p>Your reference is <span class="ref" id="s-ref"></span></p>
+        <p>We'll message you on <strong id="s-phone"></strong> to confirm. You can check your booking any time here:</p>
+        <p><a class="btn btn-ghost" id="s-link" href="#">View my booking</a></p>
       </section>
     </div>
+  </section>
 
-    <section class="card success" id="success-view" hidden>
-      <div class="big">🎉</div>
-      <h2>Request sent!</h2>
-      <p>Your reference is <span class="ref" id="s-ref"></span></p>
-      <p>We'll message you on <strong id="s-phone"></strong> to confirm. You can check your booking any time here:</p>
-      <p><a class="btn btn-ghost" id="s-link" href="#">View my booking</a></p>
-    </section>
+  <section class="section section-alt" id="faq">
+    <div class="container narrow">
+      <h2 class="section-title">Questions</h2>
+      <div class="faq">
+        <details>
+          <summary>How does booking work?</summary>
+          <p>Choose your dates, items and delivery option above, then send a request. We'll check everything and message you to confirm, with the final total and how to pay.</p>
+        </details>
+        <details>
+          <summary>How much is delivery?</summary>
+          <p>It's based on how far you are from us and covers both drop-off and collection. Enter your postcode in the booking form for an instant estimate.<span data-if-miles> We usually deliver within about <span data-max-miles>30</span> miles. If you're further away, send a request anyway and we'll let you know.</span> Or collect from us for free.</p>
+        </details>
+        <details data-if-deposit>
+          <summary>Is there a deposit?</summary>
+          <p>Yes, a refundable deposit of <span data-deposit-pct>10</span>% of the hire cost. You get it back in full once everything's collected in good condition. We may keep some or all of it to cover damage or loss.</p>
+        </details>
+        <details>
+          <summary>How do I pay?</summary>
+          <p>Cash on delivery or collection, or bank transfer. We send our bank details when we confirm your booking. Nothing is charged when you send a request.</p>
+        </details>
+        <details>
+          <summary>How long can I hire for?</summary>
+          <p>From a single day up to <span data-max-days>14</span> days. Prices are per item, per day, so a two-day hire costs twice a one-day hire.</p>
+        </details>
+        <details>
+          <summary>Can I check on my booking?</summary>
+          <p>Yes. After sending a request you'll get a reference and a link to a page showing your booking's status.</p>
+        </details>
+      </div>
+    </div>
+  </section>
 
-    <footer id="footer"></footer>
-  </main>
+  <section class="cta-band">
+    <div class="container cta-inner">
+      <div>
+        <h2>Got a party coming up?</h2>
+        <p>See which dates are free and get your price in seconds.</p>
+      </div>
+      <a class="btn btn-cta light" href="#book">Book now</a>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <div class="brand"><span class="brand-mark" aria-hidden="true">🎉</span><span data-biz>Party Table &amp; Chair Hire</span></div>
+        <p id="footer"></p>
+      </div>
+      <div class="footer-links">
+        <a href="#how">How it works</a>
+        <a href="#prices">Prices</a>
+        <a href="#book">Book</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </div>
+    <div class="container copyright">© <span id="year"></span> <span data-biz>Party Table &amp; Chair Hire</span></div>
+  </footer>
+
   <script type="module" src="/js/app.js"></script>
 </body>
 </html>
