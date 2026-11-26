@@ -54,8 +54,21 @@ The result is rounded up to the nearest 50p. With the defaults (40 mpg, £1.40/L
 ```
 cp .env.example .env   # edit it
 npm install
-npm start              # http://localhost:3000
+npm start              # builds the TypeScript, then serves http://localhost:3000
 ```
+
+## Code layout (TypeScript)
+
+```
+src/server.ts        Express server and API routes
+src/lib/             config, dates, pricing, distance lookup, JSON file store
+src/client/          browser code for the booking, admin and status pages
+src/shared/types.d.ts  types shared by server and browser (Booking, quotes, API responses)
+public/              HTML + CSS (compiled browser code lands in public/js/)
+```
+
+`npm start` runs `npm run build` first, which compiles `src/` to `dist/` (server) and `public/js/` (browser).
+Both output folders are git-ignored. Use `npm run typecheck` to check types without building.
 
 ## Want automatic deposit refunds later?
 

@@ -1,39 +1,41 @@
 // Tiny JSON-file store. Plenty for a side business with a handful of bookings a week.
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import type { Booking } from '../shared/types';
 
-class Store {
-  constructor(file) {
-    this.file = file;
+export default class Store {
+  private bookings: Booking[];
+
+  constructor(private readonly file: string) {
     fs.mkdirSync(path.dirname(file), { recursive: true });
     try {
-      this.bookings = JSON.parse(fs.readFileSync(file, 'utf8'));
+      this.bookings = JSON.parse(fs.readFileSync(file, 'utf8')) as Booking[];
     } catch {
       this.bookings = [];
     }
   }
 
-  save() {
+  private save(): void {
     const tmp = this.file + '.tmp';
     fs.writeFileSync(tmp, JSON.stringify(this.bookings, null, 2));
     fs.renameSync(tmp, this.file); // atomic replace so a crash never leaves a half-written file
   }
 
-  all() {
+  all(): Booking[] {
     return this.bookings;
   }
 
-  get(id) {
+  get(id: string): Booking | undefined {
     return this.bookings.find((b) => b.id === id);
   }
 
-  insert(booking) {
+  insert(booking: Booking): Booking {
     this.bookings.push(booking);
     this.save();
     return booking;
   }
 
-  update(id, patch) {
+  update(id: string, patch: Partial<Booking>): Booking | null {
     const b = this.get(id);
     if (!b) return null;
     Object.assign(b, patch, { updatedAt: new Date().toISOString() });
@@ -41,5 +43,3 @@ class Store {
     return b;
   }
 }
-
-module.exports = Store;

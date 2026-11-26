@@ -1,5 +1,8 @@
 // All settings come from environment variables (Replit "Secrets", or a .env file locally).
-const num = (v, d) => (v === undefined || v === '' || isNaN(Number(v)) ? d : Number(v));
+import path from 'path';
+
+const num = (v: string | undefined, d: number): number =>
+  v === undefined || v === '' || isNaN(Number(v)) ? d : Number(v);
 
 const config = {
   port: num(process.env.PORT, 3000),
@@ -39,7 +42,9 @@ const config = {
   adminPassword: process.env.ADMIN_PASSWORD || '',
   ntfyTopic: process.env.NTFY_TOPIC || '',
 
-  dataFile: process.env.DATA_FILE || require('path').join(__dirname, '..', 'data', 'bookings.json'),
+  // Compiled file lives in dist/lib, so the project root is two levels up
+  dataFile: process.env.DATA_FILE || path.join(__dirname, '..', '..', 'data', 'bookings.json'),
 };
 
-module.exports = config;
+export type Config = typeof config;
+export default config;

@@ -1,0 +1,13 @@
+{
+  // Browser: src/client/ -> public/js/ (ES modules, loaded with <script type="module">)
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "module": "ES2022",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": [],
+    "rootDir": "src/client",
+    "outDir": "public/js"
+  },
+  "include": ["src/client/**/*.ts", "src/shared/**/*.d.ts"]
+}

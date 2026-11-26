@@ -1,10 +1,21 @@
-const { dayCount } = require('./dates');
+import { dayCount } from './dates';
+import type { Config } from './config';
+import type { DeliveryEstimate, HireQuote } from '../shared/types';
 
-const round2 = (n) => Math.round(n * 100) / 100;
-const roundUpTo50p = (n) => Math.ceil(n * 2) / 2;
+export const round2 = (n: number): number => Math.round(n * 100) / 100;
+const roundUpTo50p = (n: number): number => Math.ceil(n * 2) / 2;
 const LITRES_PER_UK_GALLON = 4.546;
 
-function hireQuote({ tables, chairs, start, end }, cfg) {
+type PricingConfig = Pick<Config, 'tablePrice' | 'chairPrice' | 'depositPercent'>;
+type DeliveryConfig = Pick<
+  Config,
+  'deliveryTrips' | 'mpg' | 'fuelPricePerLitre' | 'freeDeliveryMiles' | 'minDeliveryFee' | 'deliveryBaseFee' | 'maxDeliveryMiles'
+>;
+
+export function hireQuote(
+  { tables, chairs, start, end }: { tables: number; chairs: number; start: string; end: string },
+  cfg: PricingConfig,
+): HireQuote {
   const days = dayCount(start, end);
   const tablesCost = round2(tables * cfg.tablePrice * days);
   const chairsCost = round2(chairs * cfg.chairPrice * days);
@@ -14,10 +25,10 @@ function hireQuote({ tables, chairs, start, end }, cfg) {
 }
 
 // oneWayMiles: home -> customer by road
-function deliveryQuote(oneWayMiles, cfg) {
+export function deliveryQuote(oneWayMiles: number, cfg: DeliveryConfig): DeliveryEstimate {
   const totalMiles = oneWayMiles * 2 * cfg.deliveryTrips;
   const fuelCost = (totalMiles / cfg.mpg) * LITRES_PER_UK_GALLON * cfg.fuelPricePerLitre;
-  let fee;
+  let fee: number;
   if (oneWayMiles <= cfg.freeDeliveryMiles) fee = 0;
   else fee = roundUpTo50p(Math.max(cfg.minDeliveryFee, fuelCost + cfg.deliveryBaseFee));
   return {
@@ -28,5 +39,3 @@ function deliveryQuote(oneWayMiles, cfg) {
     outOfArea: cfg.maxDeliveryMiles > 0 && oneWayMiles > cfg.maxDeliveryMiles,
   };
 }
-
-module.exports = { hireQuote, deliveryQuote, round2 };
