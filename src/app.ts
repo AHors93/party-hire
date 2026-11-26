@@ -8,6 +8,7 @@ import { isValidDate, todayUK, addDays, dayCount, eachDay, prettyRange } from '.
 import { lookupPostcode, drivingMiles, type Place } from './lib/distance';
 import { hireQuote, deliveryQuote, round2 } from './lib/pricing';
 import { bookingsToCsv } from './lib/export';
+import { sendTelegram, recentChats, telegramReady } from './lib/telegram';
 import type {
   AdminBookingsResponse,
   AdminPatchBody,
@@ -135,27 +136,24 @@ function bookingUrl(req: Request, b: Booking): string {
 }
 
 async function notifyOwner(req: Request, b: Booking): Promise<void> {
-  if (!cfg.ntfyTopic) return;
+  if (!telegramReady()) return;
   const dq = b.deliveryQuote;
   const miles = isPriced(dq) && dq.oneWayMiles ? ` (~${dq.oneWayMiles} mi)` : '';
-  const lines = [
-    `${b.name} – ${b.tables} tables, ${b.chairs} chairs`,
+  const text = [
+    `🪑 New booking request ${b.ref}`,
+    '',
+    `${b.name} · ${b.phone}`,
+    `${b.tables} tables, ${b.chairs} chairs`,
     `${prettyRange(b.start, b.end)} (${b.days} day${b.days > 1 ? 's' : ''})`,
     b.delivery ? `Delivery to ${b.postcode}${miles}` : 'Collection',
     `Est. total £${b.total.toFixed(2)}${b.deposit ? ` + £${b.deposit.toFixed(2)} deposit` : ''} · ${PAYMENT_METHODS[b.paymentMethod]}`,
-  ];
-  try {
-    const res = await fetch(`https://ntfy.sh/${encodeURIComponent(cfg.ntfyTopic)}`, {
-      method: 'POST',
-      body: lines.join('\n'),
-      headers: { Title: `New booking request ${b.ref}`, Click: `${baseUrl(req)}/admin`, Tags: 'chair,tada' },
-      signal: AbortSignal.timeout(5000),
-    });
-    if (res.ok) console.log(`ntfy alert sent for ${b.ref}`);
-    else console.warn(`ntfy refused the alert for ${b.ref}: ${res.status} ${(await res.text()).slice(0, 200)}`);
-  } catch (e) {
-    console.warn('ntfy notification failed:', e instanceof Error ? e.message : e);
-  }
+    ...(b.notes ? ['', `Notes: ${b.notes}`] : []),
+    '',
+    `Confirm or decline: ${baseUrl(req)}/admin`,
+  ].join('\n');
+  const r = await sendTelegram(text);
+  if (r.ok) console.log(`Telegram alert sent for ${b.ref}`);
+  else console.warn(`Telegram alert failed for ${b.ref}: ${r.error}`);
 }
 
 // Very small in-memory rate limiter for public POSTs
@@ -329,6 +327,29 @@ app.get('/admin/api/whoami', (req, res) => {
     socketAddress: req.socket.remoteAddress ?? null,
     trustProxy: cfg.trustProxy,
   });
+});
+
+// Telegram setup helpers: find your chat ID, then send yourself a test message
+app.get('/admin/api/telegram', async (_req, res) => {
+  const { chats, error } = await recentChats();
+  res.json({
+    botTokenSet: !!cfg.telegramBotToken,
+    chatIdSet: cfg.telegramChatId || null,
+    chatsThatMessagedTheBot: chats,
+    ...(error ? { error } : {}),
+    help: !cfg.telegramBotToken
+      ? 'Add TELEGRAM_BOT_TOKEN in your settings first.'
+      : chats.length === 0 && !cfg.telegramChatId
+        ? 'Open your bot in Telegram, press Start (or send it any message), then reload this page.'
+        : !cfg.telegramChatId
+          ? 'Copy your id from chatsThatMessagedTheBot into TELEGRAM_CHAT_ID.'
+          : 'All set. Visit /admin/api/telegram/test to send yourself a test message.',
+  });
+});
+
+app.get('/admin/api/telegram/test', async (_req, res) => {
+  const r = await sendTelegram(`✅ Test from ${cfg.businessName}: booking alerts are working.`);
+  res.status(r.ok ? 200 : 502).json(r);
 });
 
 app.get('/admin/api/bookings', (req, res) => {

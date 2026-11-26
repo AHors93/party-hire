@@ -59,9 +59,17 @@ To restore a backup, upload it to the volume as `bookings.json` (or ask for help
 
 Admin: `https://your-url/admin`. Any username works; the password is `ADMIN_PASSWORD`.
 
-## Phone notifications (free)
+## Booking alerts (Telegram, free)
 
-Install the **ntfy** app (iOS/Android), subscribe to a topic name nobody would guess (e.g. `adam-party-hire-8f3k2`), and set `NTFY_TOPIC` to the same name. Each new request pings your phone, and tapping it opens the admin page.
+Each new request sends you a Telegram message with the customer's name, phone, dates, items and total, plus a link to the admin page.
+
+1. In Telegram, message **@BotFather**, send `/newbot`, and pick a name and a username ending in `bot`. It replies with a **token** (looks like `123456789:AAF...`). Keep it secret.
+2. Add `TELEGRAM_BOT_TOKEN` with that token to your settings and let the site redeploy.
+3. Open your new bot in Telegram (BotFather gives you the link) and press **Start**.
+4. Visit `https://your-url/admin/api/telegram`. Your chat appears under `chatsThatMessagedTheBot`. Copy its `id` into `TELEGRAM_CHAT_ID` and let it redeploy.
+5. Visit `https://your-url/admin/api/telegram/test`. A test message should arrive.
+
+Alerts only ever go to `TELEGRAM_CHAT_ID`, so anyone else who finds your bot gets nothing.
 
 ## Delivery estimate
 

@@ -58,7 +58,9 @@ const config = {
 
   // Admin + notifications
   adminPassword: process.env.ADMIN_PASSWORD || '',
-  ntfyTopic: (process.env.NTFY_TOPIC || '').trim(),
+  telegramBotToken: (process.env.TELEGRAM_BOT_TOKEN || '').trim(),
+  telegramChatId: (process.env.TELEGRAM_CHAT_ID || '').trim(),
+  telegramApiUrl: (process.env.TELEGRAM_API_URL || 'https://api.telegram.org').replace(/\/+$/, ''), // tests point this at a fake
   trustProxy: trustProxy(process.env.TRUST_PROXY),
 
   // Where bookings are saved. On Railway, the attached volume is used automatically.

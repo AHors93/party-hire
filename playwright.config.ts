@@ -36,7 +36,8 @@ export default defineConfig({
       DEPOSIT_PERCENT: '10',
       BANK_DETAILS: 'Name: Test | Sort code: 00-00-00 | Account: 12345678',
       HOME_POSTCODE: '', // no real postcode lookups during tests
-      NTFY_TOPIC: '', // never ping your phone from tests
+      TELEGRAM_BOT_TOKEN: '', // never message your phone from tests
+      TELEGRAM_CHAT_ID: '',
       PUBLIC_URL: '',
     },
   },

@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import type { Server } from 'node:http';
+import http, { type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 
 // Settings must be in place before the app (and its config) is loaded
@@ -20,14 +20,40 @@ Object.assign(process.env, {
   BOOKING_FEE: '1.5',
   DEPOSIT_PERCENT: '10',
   HOME_POSTCODE: '', // keep tests offline: no postcode lookups
-  NTFY_TOPIC: '',
+  TELEGRAM_BOT_TOKEN: 'test-token',
+  TELEGRAM_CHAT_ID: '4242',
 });
 
 let server: Server;
 let base = '';
 let ipCounter = 0;
 
+// A fake Telegram API, so we can see exactly what would be sent without contacting Telegram
+let telegram: Server;
+const telegramSent: { path: string; body: { chat_id: string; text: string } }[] = [];
+let telegramUpdates: unknown[] = [];
+
 before(async () => {
+  telegram = http.createServer((req, res) => {
+    let raw = '';
+    req.on('data', (c) => (raw += c));
+    req.on('end', () => {
+      res.setHeader('Content-Type', 'application/json');
+      if (req.url === '/bottest-token/sendMessage') {
+        telegramSent.push({ path: req.url, body: JSON.parse(raw) });
+        res.end(JSON.stringify({ ok: true, result: {} }));
+      } else if (req.url === '/bottest-token/getUpdates') {
+        res.end(JSON.stringify({ ok: true, result: telegramUpdates }));
+      } else {
+        res.statusCode = 401;
+        res.end(JSON.stringify({ ok: false, description: 'Unauthorized' }));
+      }
+    });
+  });
+  telegram.listen(0);
+  await new Promise((r) => telegram.once('listening', r));
+  process.env.TELEGRAM_API_URL = `http://127.0.0.1:${(telegram.address() as AddressInfo).port}`;
+
   const { app } = await import('../../src/app');
   server = app.listen(0);
   await new Promise((r) => server.once('listening', r));
@@ -36,6 +62,7 @@ before(async () => {
 
 after(() => {
   server.close();
+  telegram.close();
   fs.rmSync(dir, { recursive: true, force: true });
 });
 
@@ -264,4 +291,60 @@ test('admin can download all bookings as CSV and as a JSON backup', async () => 
   assert.match(backup.headers.get('content-disposition')!, /bookings-backup-/);
   const all = (await backup.json()) as { ref: string }[];
   assert.ok(all.some((b) => b.ref === ref));
+});
+
+// ---------- Telegram alerts ----------
+
+async function waitFor<T>(get: () => T | undefined): Promise<T> {
+  for (let i = 0; i < 50; i++) {
+    const v = get();
+    if (v !== undefined) return v;
+    await new Promise((r) => setTimeout(r, 20));
+  }
+  throw new Error('timed out');
+}
+
+test('a new booking sends a Telegram alert to the owner\'s chat', async () => {
+  const r = await call('POST', '/api/bookings', bookingBody({ name: 'Telly Alert', notes: 'Back gate please' }));
+  assert.equal(r.status, 200);
+  const { ref } = (await r.json()) as { ref: string };
+  const sent = await waitFor(() => telegramSent.find((m) => m.body.text.includes(ref)));
+  assert.equal(sent.body.chat_id, '4242');
+  const text = sent.body.text;
+  assert.match(text, /New booking request PH-/);
+  assert.match(text, /Telly Alert · 07123 456789/);
+  assert.match(text, /2 tables, 10 chairs/);
+  assert.match(text, /Collection/);
+  assert.match(text, /Notes: Back gate please/);
+  assert.match(text, /\/admin$/);
+  assert.doesNotMatch(text, /SECRET BANK DETAILS/);
+});
+
+test('telegram setup page needs the admin password', async () => {
+  assert.equal((await call('GET', '/admin/api/telegram')).status, 401);
+  assert.equal((await call('GET', '/admin/api/telegram/test')).status, 401);
+});
+
+test('telegram setup page lists who has messaged the bot', async () => {
+  telegramUpdates = [
+    { update_id: 1, message: { chat: { id: 4242, first_name: 'Sam', last_name: 'Owner' } } },
+    { update_id: 2, message: { chat: { id: 4242, first_name: 'Sam', last_name: 'Owner' } } },
+    { update_id: 3, message: { chat: { id: 99, username: 'someone' } } },
+  ];
+  const r = await admin('GET', '/admin/api/telegram');
+  assert.equal(r.status, 200);
+  const body = (await r.json()) as { botTokenSet: boolean; chatIdSet: string; chatsThatMessagedTheBot: { id: number; name: string }[] };
+  assert.equal(body.botTokenSet, true);
+  assert.equal(body.chatIdSet, '4242');
+  assert.deepEqual(body.chatsThatMessagedTheBot, [{ id: 4242, name: 'Sam Owner' }, { id: 99, name: 'someone' }]);
+  assert.doesNotMatch(JSON.stringify(body), /test-token/); // never echo the secret token
+});
+
+test('telegram test button sends a test message', async () => {
+  const before = telegramSent.length;
+  const r = await admin('GET', '/admin/api/telegram/test');
+  assert.equal(r.status, 200);
+  assert.deepEqual(await r.json(), { ok: true });
+  assert.equal(telegramSent.length, before + 1);
+  assert.match(telegramSent.at(-1)!.body.text, /booking alerts are working/);
 });
