@@ -230,3 +230,7 @@ body.site { --sun: #f4b740; --teal: #2a9d8f; --display: "Fraunces", Georgia, "Ti
   .brand-mark { width: 30px; height: 30px; flex: none; }
   .btn-nav { padding: 9px 13px; font-size: 14px; }
 }
+/* Hidden radios inside .seg must not inherit the 100% width of text inputs
+   (it made the page scroll sideways on phones) */
+.seg label { position: relative; }
+.field .seg input, .seg input { width: 1px; height: 1px; padding: 0; border: 0; }

@@ -6,3 +6,7 @@ data/*.tmp
 # build output (made by `npm run build`, which `npm start` runs first)
 dist
 public/js
+
+# test output
+playwright-report
+test-results

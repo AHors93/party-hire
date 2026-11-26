@@ -70,6 +70,23 @@ public/              HTML + CSS (compiled browser code lands in public/js/)
 `npm start` runs `npm run build` first, which compiles `src/` to `dist/` (server) and `public/js/` (browser).
 Both output folders are git-ignored. Use `npm run typecheck` to check types without building.
 
+## Tests
+
+```
+npm test            # unit + API tests (~1 second)
+npm run test:e2e    # end-to-end in a real browser (Playwright)
+npm run test:all    # type-check + all of the above
+```
+
+The first time on a new computer, run `npx playwright install chromium` to download the test browser.
+
+- `test/unit/`: pricing, deposit rounding, delivery fees, dates.
+- `test/api/`: the real server, covering validation, overbooking, stock only reserved once confirmed, the admin password, privacy of the status page, and rate limiting.
+- `test/e2e/`: a browser books as a customer, then logs into admin, confirms (checks the WhatsApp message), and checks the status page and calendar update. It also checks the phone layout.
+
+Tests use a throwaway data file and their own settings, so your real bookings, `.env` and phone notifications are never touched.
+If a browser test fails, `npx playwright show-report` shows screenshots and a step-by-step trace.
+
 ## Want automatic deposit refunds later?
 
 That needs card payments. Add Stripe Checkout to take the deposit by card, and the "Deposit returned" button can then call Stripe's refund API so the money goes back automatically.
